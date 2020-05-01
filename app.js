@@ -15,10 +15,30 @@ app.use('/suggestedlist', suggestedListRoute);
 app.use('/favouritelist', favouriteListRoute);
 
 
+app.use((req,res,next)=>{
+
+    const error = new Error();
+    error.status=404;
+    error.messsage = 'Not Found';
+    next(error);
+});
+
+app.use ((error,req,res, next)=>{
+
+   res.status(error.status || 500);
+    console.log("this is from the second function");
+   res.json({
+       error: {
+           messsage: error.messsage
+           
+       }
+   });
+});
 
 app.get('/', (req,res)=> {
     res.send('This is home');
 });
+
 
 
 mongoose.connect(

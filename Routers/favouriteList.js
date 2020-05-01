@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const FavouriteList = require('../Models/FavouriteList');
+const Products = require('../Models/Products');
 
 //Request all the favourite packs from the database (For Admins)
 router.get('/view', async(req,res)=> {
@@ -26,6 +28,7 @@ router.get('/:clientID', async (req,res) =>{
 router.post('/add',  async (req,res) =>{
     
     const favouriteList = new FavouriteList({
+        _id: new mongoose.Types.ObjectId,
         name : req.body.name,
         clientID : req.body.clientID,
         availability : req.body.availability,
