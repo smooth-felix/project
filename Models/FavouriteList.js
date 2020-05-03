@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ProductListItem = mongoose.Schema({
 
-    id : {type:mongoose.Schema.Types.ObjectId,
+    _id : {type:mongoose.Schema.Types.ObjectId,
         ref: 'Products', 
     required: true},
     quantity : {
@@ -19,7 +19,7 @@ const FavouriteListSchema = mongoose.Schema({
         required : true
     },
     clientID: {
-        type : String,
+        type : mongoose.Schema.Types.ObjectId, ref: 'Users',
         required : true
     },
  

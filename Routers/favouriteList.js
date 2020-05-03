@@ -1,14 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const _=require('underscore');
 const FavouriteList = require('../Models/FavouriteList');
 const Products = require('../Models/Products');
+const hero=require('../Extras/scripts');
 
 //Request all the favourite packs from the database (For Admins)
 router.get('/view', async(req,res)=> {
     try{
-        const viewFavouriteList = await FavouriteList.find();
-        res.json(viewFavouriteList);
+        const favouriteList = await FavouriteList.find().populate('products._id');
+        const lengthOfF=favouriteList.length;
+        
+    if (lengthOfF===0)res.json("No Entries Found")
+        else{
+            const amount=hero.getAmountOfThePack(favouriteList);
+            const result= hero.generateObject(favouriteList,amount);
+            res.json(result);
+            
+        }
     }catch(err){
         res.json({message: err});
     }
@@ -17,8 +27,15 @@ router.get('/view', async(req,res)=> {
 //Request all the favourite packs by a userID
 router.get('/:clientID', async (req,res) =>{
     try{
-    const favouriteList= await FavouriteList.find({clientID : req.params.clientID});
-    res.json(favouriteList);
+    const favouriteList= await FavouriteList.find({clientID : req.params.clientID}).populate('products._id');
+    const lengthofF= favouriteList.length;
+    if(lengthofF===0) res.json("No Entries found");
+    else{
+        const amount = hero.getAmountOfThePack(favouriteList);
+        const result= hero.generateObject(favouriteList,amount);
+        res.json(result);
+    }
+    
     }catch(err){
         res.json({message:err});
     }
